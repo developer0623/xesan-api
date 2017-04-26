@@ -1,0 +1,18 @@
+require 'yaml'
+
+desc "Build Passenger image"
+task :build_passenger do
+  puts "Building Passenger Image"
+  version = YAML.load_file('config.yml')['version']
+  system(%Q{docker build -t xensan/passenger:#{version} .})
+  system(%Q{docker tag -f xensan/passenger:#{version} xensan/passenger:latest})
+end
+
+desc "Push the current docker image to docker hub"
+task :push do
+  version = YAML.load_file('config.yml')['version']
+  system(%Q{docker push xensan/passenger:#{version}})
+  system(%Q{docker push xensan/passenger:latest})
+end
+
+task default: :build_passenger

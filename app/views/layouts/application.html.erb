@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <%
+    # AL: Need jquery to get ajax form submission. We can use other js packages to replace jquery in future.
+  %>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+  <%= csrf_meta_tags %>
+</head>
+<body>
+
+<%= yield %>
+
+</body>
+</html>

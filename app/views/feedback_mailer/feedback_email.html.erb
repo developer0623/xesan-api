@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+    <style>
+    .feedback {
+      background-color: #efefef;
+      padding: 2em;
+      border: 1px solid #ccc;
+    }
+    .sender {
+      font-weight: bold;
+    }
+    </style>
+  </head>
+  <body>
+    <h2>Feeback:</h2> <span class="sender">from <%= @user.first_name %> <%= @user.last_name %></span>
+    <p class="feedback">
+      <%= @feedback %>
+    </p>
+  </body>
+</html>

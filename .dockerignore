@@ -1,0 +1,13 @@
+.git
+.env
+.docker
+.elasticbeanstalk
+.vagrant
+docker/
+coverate
+certs
+log/*
+tmp/*
+xenapi*.zip
+Dockerrun.aws.json
+docker-compose.yml

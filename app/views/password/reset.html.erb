@@ -1,0 +1,156 @@
+<%
+# This is pretty much a quick dirty page to get things moving. I embeded css here
+# and we should figure out whether xenapi is a Rails server and fully supports things
+# like stylesheet_link_tag. Figured I'd better not messing permissions in docker for now.
+# note: stylesheet_link_tag causes the "Permission denied @ dir_s_mkdir" error.
+%>
+<%
+def protect_against_forgery?
+  false #disable active user check, it has not been password-verified.
+end
+%>
+<style>
+  body
+  {
+    padding:      0;
+    margin:       12px;
+    font-size:    12pt;
+    line-height:  150%;
+    font-family: 'Open Sans',"Helvetica Neue",Helvetica,sans-serif;
+  }
+
+  .page-header
+  {
+    font-size: 300%;
+    margin-left: 80px;
+    margin-top: 40px;
+    margin-bottom: 80px;
+  }
+
+ .panel
+ {
+    margin: auto;
+    width: 360px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+  }
+
+ .panel-header
+ {
+    color: #333;
+    background-color: #f5f5f5;
+    border-bottom: 1px solid #ddd;
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+    padding: 10px 15px;
+    font-size: 120%
+  }
+
+  .form-control
+  {
+    margin-left: 12px;
+    font-size: 100%;
+  }
+
+  .form-label
+  {
+    width: 200px;
+    padding: 1px 12px;
+  }
+
+  .form-header
+  {
+    font-size: 200%;
+    margin: 10px;
+  }
+
+  .btn
+  {
+    width: 84.5%;
+    background: #8cba19;
+    padding: 6px 12px;
+    text-align: center;
+    margin: 15px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    font-weight: 700;
+    font-size: 120%;
+  }
+
+  .desc
+  {
+    padding: 10px 15px;
+  }
+  .error
+  {
+    color: red;
+  }
+  .succeed
+  {
+    color: #8cba19;
+    padding: 30px;
+  }
+  a
+  {
+    text-decoration: none;
+    color: #fff;
+  }
+</style>
+<script>
+  $(document).ready(function() {
+
+    //bind submit button
+    $('.submit-btn').bind("click", function() {
+      var msg = function(m) {$('.err-msg-box').html("<span>" + m + "</span>");};
+      var done = function() {$('#main-panel').html('<br><span class="succeed">Password has been updated.</span><br><br>');}
+      var p = $('#user_password').val();
+      if (p === "") msg('Password not entered.');
+      else if (p.length < 8) msg("Password is too short (8 characters or more).");
+      else if (p != $('#user_password_confirmation').val()) msg('Passwords do not match.');
+      else {
+        $.ajax({
+           type: "POST",
+           url: "/v1/auth/password",
+           data: $(".form").serialize(),
+           success: function(data)
+           {
+              done();
+           },
+           error: function(data) {
+              msg('An unexpected error occurred. <br>' + JSON.parse(data.responseText).errors.full_messages[0]);
+           }
+         });
+        return false;
+      }
+    });
+  });
+</script>
+<% provide(:title, 'Reset password') %>
+<h1 class="page-header">xensan</h1>
+
+<div name="main-panel" id="main-panel" class="panel">
+  <div class="panel-header">Password Reset</div>
+  <div class="desc">Enter the new password and confirm it.</div>
+  <%= form_for(@user, url: "", method: :patch, html: { class: "form"}) do |f| %>
+
+    <%= hidden_field_tag :email, @user.email %>
+    <%= hidden_field_tag :uid, @user.email %>
+    <%= hidden_field_tag :client, @client_id %>
+    <%= hidden_field_tag :redirect_url, "/v1/password/reset" %>
+    <%= hidden_field_tag "access-token", @token %>
+    <table><tr><td>
+    <%= f.label :password, class: 'form-label' %>
+    </td><td>
+    <%= f.password_field :password, class: 'form-control' %>
+    </td></tr>
+    <tr><td>
+    <%= f.label :password_confirmation, "Confirmation", class: 'form-label'  %>
+    </td><td>
+    <%= f.password_field :password_confirmation, class: 'form-control' %>
+    </td></tr></table>
+  <% end %>
+  <div class="err-msg-box error desc"></div>
+  <div class="submit-btn btn">
+    <a href="#"> Update </a>
+  </div>
+</div>

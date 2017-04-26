@@ -1,0 +1,17 @@
+# docker-compose.yml
+
+api:
+  build: .
+  ports:
+    - "3000:80"
+  env_file:
+    - docker-conf/.env
+  links:
+    - db
+  volumes:
+    - ".:/home/app/xenapi"
+
+db:
+  image: mdillon/postgis:9.4
+  ports:
+    - "5432:5432"

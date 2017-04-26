@@ -1,0 +1,101 @@
+{
+  "AWSEBDockerrunVersion": 2,
+  "authentication": {
+    "bucket": "xensan-docker",
+    "key": "xensandockercfg"
+  },
+  "volumes": [
+    {
+      "name": "data",
+      "host": {
+        "sourcePath": "/data"
+      }
+    }
+  ],
+  "containerDefinitions": [
+    {
+      "name": "xenapi",
+      "image": "xensan/xenapi:VERSION",
+      "essential": true,
+      "memory": 3955,
+      "portMappings": [
+        {
+          "hostPort": 80,
+          "containerPort": 80
+        }
+      ],
+      "environment": [
+        {
+          "name": "XENAPI_DATABASE_HOST",
+          "value": "xenapi.cku95gaialca.us-east-1.rds.amazonaws.com"
+        },
+        {
+          "name": "XENAPI_DATABASE_NAME",
+          "value": "xenapi"
+        },
+        {
+          "name": "XENAPI_DATABASE_USER",
+          "value": "xenapi"
+        },
+        {
+          "name": "XENAPI_DATABASE_PASSWORD",
+          "value": "Y9g7AxCdYtnz7h"
+        },
+        {
+          "name": "PASSENGER_APP_ENV",
+          "value": "staging"
+        },
+        {
+          "name": "RAILS_ENV",
+          "value": "staging"
+        },
+        {
+          "name": "XENAPI_SMTP_SERVER",
+          "value": "email-smtp.us-east-1.amazonaws.com"
+        },
+        {
+          "name": "XENAPI_SMTP_PORT",
+          "value": 587
+        },
+        {
+          "name": "XENAPI_SMTP_DOMAIN",
+          "value": "xensan.com"
+        },
+        {
+          "name": "XENAPI_SMTP_USER_NAME",
+          "value": "AKIAIJJQYPB53HTR2EXQ"
+        },
+        {
+          "name": "XENAPI_SMTP_FROM",
+          "value": "paxton@xensan.com"
+        },
+        {
+          "name": "XENAPI_SMTP_PASSWORD",
+          "value": "AvGzF9/w0F9IxHO5oop4cBsqXZrz+GtS9wZYwhtbgsca"
+        },
+        {
+          "name": "XENAPI_SMTP_AUTHENTICATION",
+          "value": "login"
+        },
+        {
+          "name": "XENAPI_APN_CERT_PASSPHRASE",
+          "value": "9a)6zvuNK$+oJ$TTeHMf"
+        },
+        {
+          "name": "XENAPI_TWILIO_AUTH_TOKEN",
+          "value": "d616cc7c112731d395bd9367f55e3e4f"
+        }
+      ],
+      "mountPoints": [
+        {
+          "sourceVolume": "awseb-logs-xenapi",
+          "containerPath": "/var/log/nginx"
+        },
+        {
+          "sourceVolume": "data",
+          "containerPath": "/data"
+        }
+      ]
+    }
+  ]
+}
